@@ -1,6 +1,6 @@
-namespace WhiskyBLL
+namespace WhiskyMVC.Models
 {
-  public class WhiskyDTO
+  public class WhiskyViewModel
   {
     public int Id { get; set; }
     public string Name { get; set; }

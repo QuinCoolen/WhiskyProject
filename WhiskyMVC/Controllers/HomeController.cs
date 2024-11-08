@@ -16,7 +16,17 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        List<WhiskyDTO> whiskys = _whiskyService.GetWhiskys();
+        List<WhiskyDTO> whiskysDTO = _whiskyService.GetWhiskys();
+        List<WhiskyViewModel> whiskys = whiskysDTO.Select(whisky => new WhiskyViewModel
+        {
+            Id = whisky.Id,
+            Name = whisky.Name,
+            Age = whisky.Age,
+            Year = whisky.Year,
+            Country = whisky.Country,
+            Region = whisky.Region
+        }).ToList();
+
         return View(whiskys);
     }
 
