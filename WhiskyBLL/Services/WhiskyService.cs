@@ -25,5 +25,15 @@ namespace WhiskyBLL
     {
       return _whiskyRepository.GetWhiskyById(id);
     }
+
+    public async Task UpdateWhisky(WhiskyDto whisky)
+    {
+      await _whiskyRepository.UpdateWhisky(whisky);
+    }
+
+    public async Task DeleteWhisky(int id)
+    {
+      await _whiskyRepository.DeleteWhisky(id);
+    }
   }
 }
