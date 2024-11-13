@@ -26,9 +26,9 @@ namespace WhiskyBLL
       return _whiskyRepository.GetWhiskyById(id);
     }
 
-    public async Task UpdateWhisky(WhiskyDto whisky)
+    public void UpdateWhisky(WhiskyDto whisky)
     {
-      await _whiskyRepository.UpdateWhisky(whisky);
+      _whiskyRepository.UpdateWhisky(whisky);
     }
 
     public async Task DeleteWhisky(int id)
