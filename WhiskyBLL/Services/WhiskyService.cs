@@ -11,17 +11,17 @@ namespace WhiskyBLL
       _whiskyRepository = whiskyRepository;
     }
 
-    public void CreateWhisky(WhiskyDTO whisky)
+    public void CreateWhisky(WhiskyDto whisky)
     {
       _whiskyRepository.CreateWhisky(whisky);
     }
 
-    public List<WhiskyDTO> GetWhiskys()
+    public List<WhiskyDto> GetWhiskys()
     {
       return _whiskyRepository.GetWhiskys();
     }
 
-    public WhiskyDTO GetWhiskyById(int id)
+    public WhiskyDto GetWhiskyById(int id)
     {
       return _whiskyRepository.GetWhiskyById(id);
     }

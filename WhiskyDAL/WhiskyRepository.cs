@@ -15,7 +15,7 @@ namespace WhiskyDAL
                         ?? throw new ArgumentNullException("DefaultConnection", "Connection string 'DefaultConnection' is missing.");
     }
 
-    public void CreateWhisky(WhiskyDTO whisky)
+    public void CreateWhisky(WhiskyDto whisky)
     {
       using (MySqlConnection conn = new(connectionString))
       {
@@ -34,9 +34,9 @@ namespace WhiskyDAL
       }
     }
 
-    public List<WhiskyDTO> GetWhiskys()
+    public List<WhiskyDto> GetWhiskys()
     {
-      List<WhiskyDTO> whiskys = [];
+      List<WhiskyDto> whiskys = [];
 
       using (MySqlConnection conn = new(connectionString))
       {
@@ -47,7 +47,7 @@ namespace WhiskyDAL
 
         while (reader.Read())
         {
-          WhiskyDTO whisky = new()
+          WhiskyDto whisky = new()
           {
             Id = reader.GetInt32("id"),
             Name = reader.GetString("name"),
@@ -65,9 +65,9 @@ namespace WhiskyDAL
       return whiskys;
     }
 
-    public WhiskyDTO GetWhiskyById(int id)
+    public WhiskyDto GetWhiskyById(int id)
     {
-      WhiskyDTO whisky = new();
+      WhiskyDto whisky = new();
 
       using (MySqlConnection conn = new(connectionString))
       {
@@ -94,7 +94,7 @@ namespace WhiskyDAL
       return whisky;
     }
 
-    public async Task UpdateWhisky(WhiskyDTO whisky)
+    public async Task UpdateWhisky(WhiskyDto whisky)
     {
       using (MySqlConnection conn = new(connectionString))
       {

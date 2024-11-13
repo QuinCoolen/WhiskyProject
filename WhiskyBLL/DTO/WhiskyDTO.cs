@@ -1,6 +1,6 @@
 namespace WhiskyBLL
 {
-  public class WhiskyDTO
+  public class WhiskyDto
   {
     public int Id { get; set; }
     public string Name { get; set; }

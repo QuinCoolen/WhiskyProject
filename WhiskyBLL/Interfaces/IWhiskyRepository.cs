@@ -2,10 +2,10 @@ namespace WhiskyBLL.Interfaces
 {
   public interface IWhiskyRepository
   {
-    void CreateWhisky(WhiskyDTO whisky);
-    List<WhiskyDTO> GetWhiskys();
-    WhiskyDTO GetWhiskyById(int id);
-    Task UpdateWhisky(WhiskyDTO whisky);
+    void CreateWhisky(WhiskyDto whisky);
+    List<WhiskyDto> GetWhiskys();
+    WhiskyDto GetWhiskyById(int id);
+    Task UpdateWhisky(WhiskyDto whisky);
     Task DeleteWhisky(int id);
   }
 }

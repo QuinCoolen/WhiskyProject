@@ -16,8 +16,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        List<WhiskyDTO> whiskysDTO = _whiskyService.GetWhiskys();
-        List<WhiskyViewModel> whiskys = whiskysDTO.Select(whisky => new WhiskyViewModel
+        List<WhiskyDto> whiskysDto = _whiskyService.GetWhiskys();
+        List<WhiskyViewModel> whiskys = whiskysDto.Select(whisky => new WhiskyViewModel
         {
             Id = whisky.Id,
             Name = whisky.Name,
