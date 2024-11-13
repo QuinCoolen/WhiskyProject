@@ -50,4 +50,38 @@ public class WhiskyController : Controller
 
       return RedirectToAction("Index");
     }
+
+    public IActionResult Edit(int id)
+    {
+      WhiskyDto whiskyDto = _whiskyService.GetWhiskyById(id);
+      WhiskyViewModel whisky = new()
+      {
+        Id = whiskyDto.Id,
+        Name = whiskyDto.Name,
+        Age = whiskyDto.Age,
+        Year = whiskyDto.Year,
+        Country = whiskyDto.Country,
+        Region = whiskyDto.Region
+      };
+
+      return View(whisky);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(WhiskyViewModel whisky)
+    {
+      WhiskyDto whiskyDto = new()
+      {
+        Id = whisky.Id,
+        Name = whisky.Name,
+        Age = whisky.Age,
+        Year = whisky.Year,
+        Country = whisky.Country,
+        Region = whisky.Region
+      };
+
+      _whiskyService.UpdateWhisky(whiskyDto);
+
+      return RedirectToAction("Index");
+    }
 }

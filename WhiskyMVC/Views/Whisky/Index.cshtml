@@ -18,6 +18,7 @@
                 <th>Year</th>
                 <th>Country</th>
                 <th>Region</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +30,9 @@
                     <td>@whisky.Year</td>
                     <td>@whisky.Country</td>
                     <td>@whisky.Region</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@whisky.Id">Edit</a>
+                    </td>
                 </tr>
             }
         </tbody>
