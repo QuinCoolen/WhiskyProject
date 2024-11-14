@@ -100,4 +100,11 @@ public class WhiskyController : Controller
 
       return RedirectToAction("Index");
     }
+
+    public IActionResult Delete(int id)
+    {
+      _whiskyService.DeleteWhisky(id);
+
+      return RedirectToAction("Index");
+    }
 }

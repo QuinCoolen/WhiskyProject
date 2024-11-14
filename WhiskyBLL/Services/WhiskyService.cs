@@ -31,9 +31,9 @@ namespace WhiskyBLL
       _whiskyRepository.UpdateWhisky(whisky);
     }
 
-    public async Task DeleteWhisky(int id)
+    public void DeleteWhisky(int id)
     {
-      await _whiskyRepository.DeleteWhisky(id);
+      _whiskyRepository.DeleteWhisky(id);
     }
   }
 }
