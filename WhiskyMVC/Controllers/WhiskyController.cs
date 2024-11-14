@@ -29,6 +29,22 @@ public class WhiskyController : Controller
       return View(whiskys);
     }
 
+    public IActionResult Details(int id)
+    {
+      WhiskyDto whiskyDto = _whiskyService.GetWhiskyById(id);
+      WhiskyViewModel whisky = new()
+      {
+        Id = whiskyDto.Id,
+        Name = whiskyDto.Name,
+        Age = whiskyDto.Age,
+        Year = whiskyDto.Year,
+        Country = whiskyDto.Country,
+        Region = whiskyDto.Region
+      };
+
+      return View(whisky);
+    }
+
     public IActionResult Create()
     {
       return View();
