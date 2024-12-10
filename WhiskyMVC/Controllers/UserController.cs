@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
@@ -14,14 +16,12 @@ namespace WhiskyMVC.Controllers
             _userService = userService;
         }
 
-        // GET: User/Register
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
-        // POST: User/Register
         [HttpPost]
         public IActionResult Register(RegisterUserViewModel model)
         {
@@ -47,6 +47,49 @@ namespace WhiskyMVC.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            UserDto userDto = _userService.GetUserByEmail(model.Email);
+
+            if (userDto == null)
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
+            }
+
+            if(!BCrypt.Net.BCrypt.Verify(model.Password, userDto.PasswordHash))
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, userDto.Name),
+                new Claim(ClaimTypes.Email, userDto.Email),
+                new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, "login");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(principal);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

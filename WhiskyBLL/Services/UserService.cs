@@ -1,4 +1,4 @@
-using WhiskyBLL.Domain;
+using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
 
 public class UserService
@@ -14,7 +14,7 @@ public class UserService
     {
         var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-        var user = new UserDomain
+        var user = new UserDto
         {
             Name = dto.Name,
             Email = dto.Email,
@@ -22,5 +22,22 @@ public class UserService
         };
 
         _userRepository.CreateUser(user);
+    }
+
+    public UserDto GetUserByEmail(string email)
+    {
+        var user = _userRepository.GetUserByEmail(email);
+        
+        if (user == null)
+        {
+            return null;
+        }
+
+        return new UserDto
+        {
+            Name = user.Name,
+            Email = user.Email,
+            PasswordHash = user.PasswordHash,
+        };
     }
 }

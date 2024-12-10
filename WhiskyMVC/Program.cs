@@ -1,10 +1,17 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using WhiskyBLL;
 using WhiskyBLL.Interfaces;
 using WhiskyDAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/User/Login";
+        options.LogoutPath = "/User/Logout";
+    });
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IWhiskyRepository, WhiskyRepository>();
 builder.Services.AddScoped<WhiskyService, WhiskyService>();

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using WhiskyBLL.Interfaces;
-using WhiskyBLL.Domain;
+using WhiskyBLL.Dto;
 
 namespace WhiskyDAL {
   public class UserRepository : IUserRepository
@@ -14,7 +14,7 @@ namespace WhiskyDAL {
                         ?? throw new ArgumentNullException("DefaultConnection", "Connection string 'DefaultConnection' is missing.");
     }
 
-    public void CreateUser(UserDomain user)
+    public void CreateUser(UserDto user)
     {
       try {
         using (MySqlConnection conn = new(connectionString))
@@ -35,6 +35,41 @@ namespace WhiskyDAL {
       {
         throw new Exception("Failed to create user: " + ex.Message);
       }
+    }
+
+    public UserDto GetUserByEmail(string email)
+    {
+      try {
+        using (MySqlConnection conn = new(connectionString))
+        {
+          conn.Open();
+
+          MySqlCommand cmd = new("SELECT * FROM users WHERE email = @email", conn);
+          cmd.Parameters.AddWithValue("@email", email);
+
+          using (MySqlDataReader reader = cmd.ExecuteReader())
+          {
+            if (reader.Read())
+            {
+              return new UserDto
+              {
+                Id = reader.GetInt32("id"),
+                Name = reader.GetString("name"),
+                Email = reader.GetString("email"),
+                PasswordHash = reader.GetString("password")
+              };
+            }
+          }
+
+          conn.Close();
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Failed to retrieve user: " + ex.Message);
+      }
+
+      return null;
     }
   }
 }
