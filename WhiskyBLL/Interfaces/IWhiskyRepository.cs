@@ -1,6 +1,8 @@
+using WhiskyBLL.Dto;
+
 namespace WhiskyBLL.Interfaces
 {
-  public interface IWhiskyRepository
+    public interface IWhiskyRepository
   {
     void CreateWhisky(WhiskyDto whisky);
     List<WhiskyDto> GetWhiskys();

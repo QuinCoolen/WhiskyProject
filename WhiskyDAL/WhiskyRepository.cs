@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
-using WhiskyBLL;
+using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
 
 namespace WhiskyDAL
 {
-  public class WhiskyRepository : IWhiskyRepository
+    public class WhiskyRepository : IWhiskyRepository
   {
     private readonly string connectionString;
 

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WhiskyBLL;
+using WhiskyBLL.Dto;
 using WhiskyMVC.Models;
 
 namespace WhiskyMVC.Controllers;

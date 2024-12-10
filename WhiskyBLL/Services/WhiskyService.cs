@@ -1,8 +1,9 @@
+using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
 
 namespace WhiskyBLL
 {
-  public class WhiskyService
+    public class WhiskyService
   {
     private readonly IWhiskyRepository _whiskyRepository;
 
