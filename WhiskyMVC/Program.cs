@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IWhiskyRepository, WhiskyRepository>();
 builder.Services.AddScoped<WhiskyService, WhiskyService>();
+builder.Services.AddScoped<UserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 var app = builder.Build();
 

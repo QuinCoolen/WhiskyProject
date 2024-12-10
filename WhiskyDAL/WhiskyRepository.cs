@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
+using WhiskyDAL.Entities;
 
 namespace WhiskyDAL
 {
