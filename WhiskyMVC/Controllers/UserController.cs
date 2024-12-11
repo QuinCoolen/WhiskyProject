@@ -27,6 +27,12 @@ namespace WhiskyMVC.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_userService.UserExists(model.Email))
+                {
+                    ModelState.AddModelError("", "User with this email already exists.");
+                    return View(model);
+                }
+
                 var registerDto = new RegisterUserDto
                 {
                     Name = model.Name,

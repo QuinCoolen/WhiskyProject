@@ -23,6 +23,11 @@ public class UserService
 
         _userRepository.CreateUser(user);
     }
+    public bool UserExists(string email)
+    {
+        var user = _userRepository.GetUserByEmail(email);
+        return user != null;
+    }
 
     public UserDto GetUserByEmail(string email)
     {
