@@ -1,4 +1,5 @@
 using WhiskyBLL.Dto;
+using WhiskyBLL.Exceptions;
 using WhiskyBLL.Interfaces;
 
 public class UserService
@@ -35,7 +36,7 @@ public class UserService
         
         if (user == null)
         {
-            return null;
+            throw new NotFoundException("User not found.");
         }
 
         return new UserDto

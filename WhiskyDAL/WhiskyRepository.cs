@@ -95,6 +95,35 @@ namespace WhiskyDAL
       return whisky;
     }
 
+    public WhiskyDto GetWhiskyByName(string name)
+    {
+      WhiskyDto whisky = new();
+
+      using (MySqlConnection conn = new(connectionString))
+      {
+        conn.Open();
+
+        MySqlCommand cmd = new("SELECT * FROM whiskys WHERE name = @name", conn);
+        cmd.Parameters.AddWithValue("@name", name);
+
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+          whisky.Id = reader.GetInt32("id");
+          whisky.Name = reader.GetString("name");
+          whisky.Age = reader.GetInt32("age");
+          whisky.Year = reader.GetInt32("year");
+          whisky.Country = reader.GetString("country");
+          whisky.Region = reader.GetString("region");
+        }
+
+        conn.Close();
+      }
+
+      return whisky;
+    }
+
     public async Task UpdateWhisky(WhiskyDto whisky)
     {
       using (MySqlConnection conn = new(connectionString))
