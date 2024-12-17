@@ -15,71 +15,113 @@ namespace WhiskyBLL
 
     public void CreateWhisky(WhiskyDto whisky)
     {
-      if (whisky == null)
+      try
       {
-        throw new InvalidWhiskyDataException("Whisky data is invalid.");
-      }
+        if (whisky == null)
+        {
+          throw new InvalidWhiskyDataException("Whisky data is invalid.");
+        }
 
-      if (_whiskyRepository.GetWhiskyByName(whisky.Name) != null)
+        if (_whiskyRepository.GetWhiskyByName(whisky.Name) != null)
+        {
+          throw new WhiskyAlreadyExistsException("Whisky already exists.");
+        }
+
+        _whiskyRepository.CreateWhisky(whisky);
+      }
+      catch (Exception ex)
       {
-        throw new WhiskyAlreadyExistsException("Whisky already exists.");
+        throw new Exception("Error creating whisky", ex);
       }
-
-      _whiskyRepository.CreateWhisky(whisky);
     }
 
     public List<WhiskyDto> GetWhiskys()
     {
-      return _whiskyRepository.GetWhiskys();
+      try
+      {
+        return _whiskyRepository.GetWhiskys();
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Error retrieving whiskys", ex);
+      }
     }
 
     public WhiskyDto GetWhiskyById(int id)
     {
-      WhiskyDto whisky = _whiskyRepository.GetWhiskyById(id);
-
-      if (whisky == null)
+      try
       {
-        throw new NotFoundException("Whisky not found.");
-      }
+        WhiskyDto whisky = _whiskyRepository.GetWhiskyById(id);
 
-      return whisky;
+        if (whisky == null)
+        {
+          throw new NotFoundException("Whisky not found.");
+        }
+
+        return whisky;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Error retrieving whisky", ex);
+      }
     }
 
     public WhiskyDto GetWhiskyByName(string name)
     {
-      WhiskyDto whisky = _whiskyRepository.GetWhiskyByName(name);
-
-      if (whisky == null)
+      try
       {
-        throw new NotFoundException("Whisky not found.");
-      }
+        WhiskyDto whisky = _whiskyRepository.GetWhiskyByName(name);
 
-      return whisky;
+        if (whisky == null)
+        {
+          throw new NotFoundException("Whisky not found.");
+        }
+
+        return whisky;
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Error retrieving whisky", ex);
+      }
     }
 
     public void UpdateWhisky(WhiskyDto whisky)
     {
-      if (whisky == null)
+      try
       {
-        throw new InvalidWhiskyDataException("Whisky data is invalid.");
-      }
+        if (whisky == null)
+        {
+          throw new InvalidWhiskyDataException("Whisky data is invalid.");
+        }
 
-      if (_whiskyRepository.GetWhiskyById(whisky.Id) == null)
+        if (_whiskyRepository.GetWhiskyById(whisky.Id) == null)
+        {
+          throw new NotFoundException("Whisky not found.");
+        }
+
+        _whiskyRepository.UpdateWhisky(whisky);
+      }
+      catch (Exception ex)
       {
-        throw new NotFoundException("Whisky not found.");
+        throw new Exception("Error updating whisky", ex);
       }
-
-      _whiskyRepository.UpdateWhisky(whisky);
     }
 
     public void DeleteWhisky(int id)
     {
-      if (_whiskyRepository.GetWhiskyById(id) == null)
+      try
       {
-        throw new NotFoundException("Whisky not found.");
-      }
+        if (_whiskyRepository.GetWhiskyById(id) == null)
+        {
+          throw new NotFoundException("Whisky not found.");
+        }
 
-      _whiskyRepository.DeleteWhisky(id);
+        _whiskyRepository.DeleteWhisky(id);
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Error deleting whisky", ex);
+      }
     }
   }
 }
