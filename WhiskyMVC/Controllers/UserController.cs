@@ -1,8 +1,11 @@
 using System.Security.Claims;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
+using WhiskyBLL.Services;
 using WhiskyMVC.Models;
 
 namespace WhiskyMVC.Controllers
@@ -10,10 +13,12 @@ namespace WhiskyMVC.Controllers
     public class UserController : Controller
     {
         private readonly UserService _userService;
+        private readonly PostService _postService;
 
-        public UserController(UserService userService)
+        public UserController(UserService userService, PostService postService)
         {
             _userService = userService;
+            _postService = postService;
         }
 
         [HttpGet]
@@ -83,17 +88,26 @@ namespace WhiskyMVC.Controllers
                 return View(model);
             }
 
+            Console.WriteLine("User authenticated: " + userDto.Id);
+
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userDto.Name),
+                new Claim(ClaimTypes.Name, userDto.Email),
                 new Claim(ClaimTypes.Email, userDto.Email),
                 new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString())
             };
 
-            var identity = new ClaimsIdentity(claims, "login");
-            var principal = new ClaimsPrincipal(identity);
-
-            await HttpContext.SignInAsync(principal);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            AuthenticationProperties authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true, // This will create a persistent cookie
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7) // Cookie expires in 7 days
+            };
+            // Sign in
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
 
             return RedirectToAction("Index", "Home");
         }
@@ -103,5 +117,37 @@ namespace WhiskyMVC.Controllers
             await HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Profile()
+        {
+            if (User.Identity?.IsAuthenticated == false)
+            {
+                return RedirectToAction("Login");
+            }
+
+            string? email = User.Identity.Name;
+            if (string.IsNullOrEmpty(email))
+            {
+                return RedirectToAction("Login");
+            }
+
+            UserDto userDto = _userService.GetUserByEmail(email);
+            var postsDto = _postService.GetPosts().Where(p => p.UserId == userDto.Id).ToList();
+
+            var model = new UserProfileViewModel
+            {
+                UserName = userDto.Name,
+                Posts = postsDto.Select(post => new PostViewModel
+                {
+                    Id = post.Id,
+                    Description = post.Description,
+                    Rating = post.Rating,
+                    CreatedAt = post.CreatedAt
+                }).ToList()
+            };
+
+            return View(model);
+        }
     }
 }
+

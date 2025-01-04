@@ -1,0 +1,46 @@
+﻿@model List<WhiskyMVC.Models.PostViewModel>
+
+@{
+    ViewData["Title"] = "Post Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Posts</h1>
+</div>
+
+<div>
+    <h2>Posts</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Whisky Name</th>
+                <th>Whisky Age</th>
+                <th>Whisky Year</th>
+                <th>Whisky Country</th>
+                <th>Whisky Region</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model)
+            {
+                <tr>
+                    <td>@post.Description</td>
+                    <td>@post.Rating</td>
+                    <td>@post.Whisky.Name</td>
+                    <td>@post.Whisky.Age</td>
+                    <td>@post.Whisky.Year</td>
+                    <td>@post.Whisky.Country</td>
+                    <td>@post.Whisky.Region</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@post.Id">Details</a> |
+                        <a asp-action="Edit" asp-route-id="@post.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

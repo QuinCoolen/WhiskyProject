@@ -1,0 +1,34 @@
+@model UserProfileViewModel
+
+<h2>@Model.UserName's Profile</h2>
+
+<div>
+    <h3>Your Posts</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td>@post.Description</td>
+                    <td>@post.Rating</td>
+                    <td>
+                        <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id">Details</a> |
+                        <a asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">Edit</a> |
+                        <a asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create New Post</a>
+</div> 

@@ -22,7 +22,7 @@ namespace WhiskyBLL
           throw new InvalidWhiskyDataException("Whisky data is invalid.");
         }
 
-        if (_whiskyRepository.GetWhiskyByName(whisky.Name) != null)
+        if (_whiskyRepository.GetWhiskyByName(whisky.Name).Name != null)
         {
           throw new WhiskyAlreadyExistsException("Whisky already exists.");
         }

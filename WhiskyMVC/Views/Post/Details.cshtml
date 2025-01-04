@@ -1,0 +1,23 @@
+@model WhiskyMVC.Models.PostViewModel
+
+@{
+    ViewData["Title"] = "Post Details";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Post Details</h1>
+</div>
+
+<div>
+    <h3>Description</h3>
+    <p>@Model.Description</p>
+    <h3>Rating</h3>
+    <p>@Model.Rating</p>
+
+    <h3>Whisky Details</h3>
+    <p><strong>Name:</strong> @Model.Whisky.Name</p>
+    <p><strong>Age:</strong> @Model.Whisky.Age years</p>
+    <p><strong>Year:</strong> @Model.Whisky.Year</p>
+    <p><strong>Country:</strong> @Model.Whisky.Country</p>
+    <p><strong>Region:</strong> @Model.Whisky.Region</p>
+</div>

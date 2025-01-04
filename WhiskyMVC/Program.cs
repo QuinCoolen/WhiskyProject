@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WhiskyBLL;
 using WhiskyBLL.Interfaces;
+using WhiskyBLL.Services;
 using WhiskyDAL;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,8 +16,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IWhiskyRepository, WhiskyRepository>();
 builder.Services.AddScoped<WhiskyService, WhiskyService>();
-builder.Services.AddScoped<UserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<UserService, UserService>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<PostService, PostService>();
 
 
 var app = builder.Build();
@@ -38,6 +41,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();
