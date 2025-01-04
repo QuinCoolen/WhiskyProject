@@ -11,5 +11,6 @@ namespace WhiskyMVC.Models
     public DateTime UpdatedAt { get; set; }
     public UserProfileViewModel User { get; set; }
     public WhiskyViewModel Whisky { get; set; }
+    public bool CreateNewWhisky { get; set; }
   }
 }

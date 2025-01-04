@@ -24,26 +24,38 @@
         
         <h3>Whisky Details</h3>
         <div class="form-group">
+            <input type="checkbox" id="createNewWhisky" name="createNewWhisky" onchange="toggleWhiskyForm()" />
+            <label for="createNewWhisky">Create a new whisky</label>
+        </div>
+
+        <div class="form-group existing-whisky-group" style="display: block;">
+            <label for="ExistingWhisky" class="control-label">Select Existing Whisky</label>
+            <select asp-for="WhiskyId" class="form-control" asp-items="@(new SelectList(ViewBag.Whiskies, "Id", "Name"))">
+                <option value="">-- Select a Whisky --</option>
+            </select>
+        </div>
+        
+        <div class="form-group whisky-form-group" style="display: none;">
             <label asp-for="Whisky.Name" class="control-label"></label>
             <input asp-for="Whisky.Name" class="form-control" />
             <span asp-validation-for="Whisky.Name" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group whisky-form-group" style="display: none;">
             <label asp-for="Whisky.Age" class="control-label"></label>
             <input asp-for="Whisky.Age" class="form-control" />
             <span asp-validation-for="Whisky.Age" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group whisky-form-group" style="display: none;">
             <label asp-for="Whisky.Year" class="control-label"></label>
             <input asp-for="Whisky.Year" class="form-control" />
             <span asp-validation-for="Whisky.Year" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group whisky-form-group" style="display: none;">
             <label asp-for="Whisky.Country" class="control-label"></label>
             <input asp-for="Whisky.Country" class="form-control" />
             <span asp-validation-for="Whisky.Country" class="text-danger"></span>
         </div>
-        <div class="form-group">
+        <div class="form-group whisky-form-group" style="display: none;">
             <label asp-for="Whisky.Region" class="control-label"></label>
             <input asp-for="Whisky.Region" class="form-control" />
             <span asp-validation-for="Whisky.Region" class="text-danger"></span>
@@ -58,3 +70,19 @@
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }
 </div>
+
+<script>
+    function toggleWhiskyForm() {
+        var checkBox = document.getElementById("createNewWhisky");
+        var whiskyFormGroups = document.querySelectorAll(".whisky-form-group");
+        var existingWhiskyGroup = document.querySelector(".existing-whisky-group");
+
+        existingWhiskyGroup.style.display = checkBox.checked ? "none" : "block";
+        whiskyFormGroups.forEach(function(group) {
+            group.style.display = checkBox.checked ? "block" : "none";
+        });
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleWhiskyForm();
+    });
+</script>

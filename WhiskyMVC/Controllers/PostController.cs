@@ -64,6 +64,8 @@ namespace WhiskyMVC.Controllers
 
         public IActionResult Create()
         {
+            var whiskies = _whiskyService.GetWhiskys();
+            ViewBag.Whiskies = whiskies;
             return View();
         }
 
@@ -79,25 +81,36 @@ namespace WhiskyMVC.Controllers
 
             int userId = int.Parse(userIdClaim.Value);
 
-            // Create a new whisky
-            WhiskyDto whiskyDto = new WhiskyDto
+            WhiskyDto whisky;
+
+            if (post.CreateNewWhisky)
             {
-                Name = post.Whisky.Name,
-                Age = post.Whisky.Age,
-                Year = post.Whisky.Year,
-                Country = post.Whisky.Country,
-                Region = post.Whisky.Region
-            };
+                WhiskyDto whiskyDto = new WhiskyDto
+                {
+                    Name = post.Whisky.Name,
+                    Age = post.Whisky.Age,
+                    Year = post.Whisky.Year,
+                    Country = post.Whisky.Country,
+                    Region = post.Whisky.Region
+                };
 
-            _whiskyService.CreateWhisky(whiskyDto);
+                _whiskyService.CreateWhisky(whiskyDto);
+                whisky = _whiskyService.GetWhiskyByName(whiskyDto.Name);
+            }
+            else
+            {
+                whisky = _whiskyService.GetWhiskyById(post.WhiskyId);
 
-            WhiskyDto whisky = _whiskyService.GetWhiskyByName(whiskyDto.Name);
+                if (whisky == null)
+                {
+                    return BadRequest("Selected whisky does not exist.");
+                }
+            }
 
-            // Create a new post
             PostDto postDto = new PostDto
             {
                 UserId = userId,
-                WhiskyId = whisky.Id, // Assuming the ID is set after creation
+                WhiskyId = whisky.Id,
                 Description = post.Description,
                 Rating = post.Rating,
                 CreatedAt = DateTime.Now
@@ -105,7 +118,7 @@ namespace WhiskyMVC.Controllers
 
             _postService.CreatePost(postDto);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Profile", "User");
         }
 
         public IActionResult Edit(int id)
@@ -179,7 +192,7 @@ namespace WhiskyMVC.Controllers
         {
             _postService.DeletePost(id);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Profile", "User");
         }
     }
 } 
