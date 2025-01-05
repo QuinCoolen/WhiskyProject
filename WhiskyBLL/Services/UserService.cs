@@ -34,15 +34,12 @@ public class UserService
     {
         try 
         {
-            Console.WriteLine("GetUserByEmail called with email: " + email);
             var user = _userRepository.GetUserByEmail(email);
             
             if (user == null)
             {
                 throw new NotFoundException("User not found.");
             }
-
-            Console.WriteLine("User found: " + user.Email);
 
             return new UserDto
             {
@@ -56,5 +53,10 @@ public class UserService
         {
             throw new Exception("Failed to retrieve user: " + ex.Message);
         }
+    }
+
+    public UserDto GetUserById(int id)
+    {
+        return _userRepository.GetUserById(id);
     }
 }

@@ -1,4 +1,4 @@
-﻿@model List<WhiskyMVC.Models.WhiskyViewModel>
+﻿@model List<WhiskyMVC.Models.PostViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,4 +6,23 @@
 
 <div class="text-center">
     <h1 class="display-4">Whiskys Website</h1>
+</div>
+
+<div class="container mt-4">
+    <h2>Recent Posts</h2>
+    <div class="row">
+        @foreach (PostViewModel post in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
+                    <div class="card-body">
+                        <h5 class="card-title">@post.Description</h5>
+                        <p class="card-text">User: @post.User.UserName</p>
+                        <p class="card-text">Rating: @post.Rating</p>
+                        <p class="card-text">Created At: @post.CreatedAt.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
 </div>

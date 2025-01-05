@@ -148,7 +148,7 @@ namespace WhiskyMVC.Controllers
 
             foreach (var favourite in favouritesDto)
             {
-                var whisky = _whiskyService.GetWhiskyById(favourite.WhiskyId);
+                WhiskyDto whisky = _whiskyService.GetWhiskyById(favourite.WhiskyId);
                 favourite.Whisky = whisky;
             }
 
@@ -162,12 +162,12 @@ namespace WhiskyMVC.Controllers
                     Rating = post.Rating,
                     CreatedAt = post.CreatedAt
                 }).ToList() ?? new List<PostViewModel>(),
-                Favourites = favouritesDto?.Select(favourite => new WhiskyViewModel
+                Favourites = favouritesDto?.Select(favourite => new FavouriteWhiskyViewModel
                 {
                     Id = favourite.WhiskyId,
                     Name = favourite.Whisky?.Name ?? "Unknown",
                     Age = favourite.Whisky?.Age ?? 0,
-                }).ToList() ?? new List<WhiskyViewModel>()
+                }).ToList() ?? new List<FavouriteWhiskyViewModel>()
             };
 
             return View(model);

@@ -4,6 +4,6 @@ namespace WhiskyMVC.Models
   {
     public string UserName { get; set; }
     public List<PostViewModel> Posts { get; set; }
-    public List<WhiskyViewModel> Favourites { get; set; }
+    public List<FavouriteWhiskyViewModel> Favourites { get; set; }
   }
 }

@@ -71,5 +71,40 @@ namespace WhiskyDAL {
 
       return null;
     }
+
+    public UserDto GetUserById(int id)
+    {
+      try {
+        using (MySqlConnection conn = new(connectionString))
+        {
+          conn.Open();
+
+          MySqlCommand cmd = new("SELECT * FROM users WHERE id = @id", conn);
+          cmd.Parameters.AddWithValue("@id", id);
+
+          using (MySqlDataReader reader = cmd.ExecuteReader())
+          {
+            if (reader.Read())
+            {
+              return new UserDto
+              {
+                Id = reader.GetInt32("id"),
+                Name = reader.GetString("name"),
+                Email = reader.GetString("email"),
+                PasswordHash = reader.GetString("password")
+              };
+            }
+          }
+
+          conn.Close();
+        }
+      }
+      catch (Exception ex)
+      {
+        throw new Exception("Failed to retrieve user: " + ex.Message);
+      }
+
+      return null;
+    }
   }
 }

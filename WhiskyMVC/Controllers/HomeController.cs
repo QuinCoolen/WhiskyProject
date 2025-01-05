@@ -3,32 +3,48 @@ using Microsoft.AspNetCore.Mvc;
 using WhiskyBLL;
 using WhiskyBLL.Dto;
 using WhiskyMVC.Models;
+using System.Linq;
+using WhiskyBLL.Interfaces;
+using WhiskyBLL.Services;
 
 namespace WhiskyMVC.Controllers;
 
 public class HomeController : Controller
 {
     private readonly WhiskyService _whiskyService;
+    private readonly PostService _postService;
+    private readonly UserService _userService;
 
-    public HomeController(WhiskyService whiskyService)
+    public HomeController(WhiskyService whiskyService, PostService postService, UserService userService)
     {
         _whiskyService = whiskyService;
+        _postService = postService;
+        _userService = userService;
     }
 
     public IActionResult Index()
     {
-        List<WhiskyDto> whiskysDto = _whiskyService.GetWhiskys();
-        List<WhiskyViewModel> whiskys = whiskysDto.Select(whisky => new WhiskyViewModel
+        List<PostDto> postsDto = _postService.GetPosts();
+        List<PostViewModel> posts = postsDto.Select(post => 
         {
-            Id = whisky.Id,
-            Name = whisky.Name,
-            Age = whisky.Age,
-            Year = whisky.Year,
-            Country = whisky.Country,
-            Region = whisky.Region
+            UserDto userDto = _userService.GetUserById(post.UserId);
+
+            return new PostViewModel
+            {
+                Id = post.Id,
+                UserId = post.UserId,
+                WhiskyId = post.WhiskyId,
+                Description = post.Description,
+                Rating = post.Rating,
+                CreatedAt = post.CreatedAt,
+                User = new UserProfileViewModel // Create UserProfileViewModel to hold username
+                {
+                    UserName = userDto?.Name // Safely access the username
+                }
+            };
         }).ToList();
 
-        return View(whiskys);
+        return View(posts);
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

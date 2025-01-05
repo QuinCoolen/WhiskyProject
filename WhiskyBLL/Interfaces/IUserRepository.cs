@@ -6,5 +6,6 @@ namespace WhiskyBLL.Interfaces
   {
     void CreateUser(UserDto user);
     UserDto GetUserByEmail(string email);
+    UserDto GetUserById(int id);
   }
 }
