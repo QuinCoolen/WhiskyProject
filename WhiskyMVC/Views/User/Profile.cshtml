@@ -4,7 +4,7 @@
 
 <div class="mb-4">
     <h3>Your Posts</h3>
-    <div class="row">
+    <div class="row flex-nowrap overflow-auto">
         @foreach (var post in Model.Posts)
         {
             <div class="col-md-4 mb-2">
@@ -24,7 +24,7 @@
 
 <div>
     <h3>Your Favourites</h3>
-    <div class="row">
+    <div class="row flex-nowrap overflow-auto">
         @foreach (var whisky in Model.Favourites)
         {
             <div class="col-md-4 mb-4">
