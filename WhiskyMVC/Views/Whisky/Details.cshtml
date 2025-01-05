@@ -1,0 +1,46 @@
+@model WhiskyMVC.Models.WhiskyViewModel
+
+@{
+    ViewData["Title"] = "Whisky Details";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Name</h1>
+</div>
+
+<div class="container">
+    <div class="card" style="background-color: #3e3e3e; color: #f8f9fa;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Age:</strong> @Model.Age years</p>
+                    <p><strong>Region:</strong> @Model.Region</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Year:</strong> @Model.Year</p>
+                    <p><strong>Country:</strong> @Model.Country</p>
+                </div>
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (ViewBag.IsFavourite)
+                    {
+                        <form asp-controller="Favourite" asp-action="Remove" method="post" style="display:inline;">
+                            <input type="hidden" name="userId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value" />
+                            <input type="hidden" name="whiskyId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-danger">Remove from Favourites</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Favourite" asp-action="Add" method="post" style="display:inline;">
+                            <input type="hidden" name="UserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value" />
+                            <input type="hidden" name="WhiskyId" value="@Model.Id" />
+                            <button type="submit" class="btn btn-secondary">Add to Favourites</button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+@model List<WhiskyMVC.Models.WhiskyViewModel>
+
+<h2>Your Favourite Whiskies</h2>
+
+<div class="row">
+    @foreach (var whisky in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <a asp-controller="Whisky" asp-action="Details" asp-route-id="@whisky.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
+                <div class="card-body">
+                    <h5 class="card-title">@whisky.Name</h5>
+                    <p class="card-text">Age: @whisky.Age years</p>
+                    <p class="card-text">Year: @whisky.Year</p>
+                    <p class="card-text">Country: @whisky.Country</p>
+                    <p class="card-text">Region: @whisky.Region</p>
+                </div>
+            </a>
+        </div>
+    }
+</div>

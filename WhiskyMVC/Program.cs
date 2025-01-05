@@ -20,6 +20,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService, UserService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<PostService, PostService>();
+builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
+builder.Services.AddScoped<FavouriteService, FavouriteService>();
 
 
 var app = builder.Build();

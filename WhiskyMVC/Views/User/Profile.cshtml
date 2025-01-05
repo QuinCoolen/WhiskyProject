@@ -1,25 +1,40 @@
-@model UserProfileViewModel
+@model WhiskyMVC.Models.UserProfileViewModel
 
 <h2>@Model.UserName's Profile</h2>
 
-<div>
+<div class="mb-4">
     <h3>Your Posts</h3>
     <div class="row">
         @foreach (var post in Model.Posts)
         {
-            <div class="col-md-4 mb-4">
-                <div class="card" style="background-color: #3e3e3e; color: #f8f9fa;">
+            <div class="col-md-4 mb-2">
+                <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
                     <div class="card-body">
                         <h5 class="card-title">@post.Description</h5>
-                        <p class="card-text">Rating: @post.Rating</p>
-                        <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">View Details</a>
+                        <p class="card-text">Date: @post.CreatedAt.ToString("dd/MM/yyyy")</p>
                     </div>
-                </div>
+                </a>
+            </div>
+        }
+    </div>
+    <div>
+        <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create New Post</a>
+    </div> 
+</div>
+
+<div>
+    <h3>Your Favourites</h3>
+    <div class="row">
+        @foreach (var whisky in Model.Favourites)
+        {
+            <div class="col-md-4 mb-4">
+                <a asp-controller="Whisky" asp-action="Details" asp-route-id="@whisky.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
+                    <div class="card-body">
+                        <h5 class="card-title">@whisky.Name</h5>
+                        <p class="card-text">Age: @whisky.Age years</p>
+                    </div>
+                </a>
             </div>
         }
     </div>
 </div>
-
-<div>
-    <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create New Post</a>
-</div> 

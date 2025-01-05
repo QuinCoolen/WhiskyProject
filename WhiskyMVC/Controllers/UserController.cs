@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using WhiskyBLL;
 using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
 using WhiskyBLL.Services;
@@ -14,11 +15,15 @@ namespace WhiskyMVC.Controllers
     {
         private readonly UserService _userService;
         private readonly PostService _postService;
+        private readonly FavouriteService _favouriteService;
+        private readonly WhiskyService _whiskyService;
 
-        public UserController(UserService userService, PostService postService)
+        public UserController(UserService userService, PostService postService, FavouriteService favouriteService, WhiskyService whiskyService)
         {
             _userService = userService;
             _postService = postService;
+            _favouriteService = favouriteService;
+            _whiskyService = whiskyService;
         }
 
         [HttpGet]
@@ -132,18 +137,37 @@ namespace WhiskyMVC.Controllers
             }
 
             UserDto userDto = _userService.GetUserByEmail(email);
-            var postsDto = _postService.GetPosts().Where(p => p.UserId == userDto.Id).ToList();
 
-            var model = new UserProfileViewModel
+            if (userDto == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            List<PostDto> postsDto = _postService.GetPosts().Where(p => p.UserId == userDto.Id).ToList();
+            List<FavouriteDto> favouritesDto = _favouriteService.GetFavouritesByUserId(userDto.Id);
+
+            foreach (var favourite in favouritesDto)
+            {
+                var whisky = _whiskyService.GetWhiskyById(favourite.WhiskyId);
+                favourite.Whisky = whisky;
+            }
+
+            UserProfileViewModel model = new UserProfileViewModel
             {
                 UserName = userDto.Name,
-                Posts = postsDto.Select(post => new PostViewModel
+                Posts = postsDto?.Select(post => new PostViewModel
                 {
                     Id = post.Id,
                     Description = post.Description,
                     Rating = post.Rating,
                     CreatedAt = post.CreatedAt
-                }).ToList()
+                }).ToList() ?? new List<PostViewModel>(),
+                Favourites = favouritesDto?.Select(favourite => new WhiskyViewModel
+                {
+                    Id = favourite.WhiskyId,
+                    Name = favourite.Whisky?.Name ?? "Unknown",
+                    Age = favourite.Whisky?.Age ?? 0,
+                }).ToList() ?? new List<WhiskyViewModel>()
             };
 
             return View(model);
