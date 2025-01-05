@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiskyDAL", "WhiskyDAL\Whis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiskyBLL", "WhiskyBLL\WhiskyBLL.csproj", "{F4BF1DBA-4C30-4842-B026-9878BF4A3823}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiskyTEST", "WhiskyTEST\WhiskyTEST.csproj", "{F59D610A-0E42-48B4-B93A-7E3A40EDED58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +36,9 @@ Global
 		{F4BF1DBA-4C30-4842-B026-9878BF4A3823}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4BF1DBA-4C30-4842-B026-9878BF4A3823}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4BF1DBA-4C30-4842-B026-9878BF4A3823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F59D610A-0E42-48B4-B93A-7E3A40EDED58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F59D610A-0E42-48B4-B93A-7E3A40EDED58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F59D610A-0E42-48B4-B93A-7E3A40EDED58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F59D610A-0E42-48B4-B93A-7E3A40EDED58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

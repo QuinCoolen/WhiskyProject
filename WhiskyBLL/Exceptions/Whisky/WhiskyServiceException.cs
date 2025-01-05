@@ -2,6 +2,20 @@ using System;
 
 namespace WhiskyBLL.Exceptions
 {
+    public class WhiskyServiceException : Exception
+    {
+        public WhiskyServiceException() : base("Whisky already exists.")
+        {
+        }
+
+        public WhiskyServiceException(string message) : base(message)
+        {
+        }
+
+        public WhiskyServiceException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+    }
     public class WhiskyAlreadyExistsException : Exception
     {
         public WhiskyAlreadyExistsException() : base("Whisky already exists.")

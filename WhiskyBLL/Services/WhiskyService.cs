@@ -22,16 +22,22 @@ namespace WhiskyBLL
           throw new InvalidWhiskyDataException("Whisky data is invalid.");
         }
 
-        if (_whiskyRepository.GetWhiskyByName(whisky.Name).Name != null)
+        if (whisky.Name == null || whisky.Name == "")
         {
-          throw new WhiskyAlreadyExistsException("Whisky already exists.");
+          throw new InvalidWhiskyDataException("Whisky name is required.");
+        }
+
+        WhiskyDto existingWhisky = _whiskyRepository.GetWhiskyByName(whisky.Name);
+        if (existingWhisky != null && existingWhisky.Name != null)
+        {
+            throw new WhiskyAlreadyExistsException("Whisky already exists.");
         }
 
         _whiskyRepository.CreateWhisky(whisky);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        throw new Exception("Error creating whisky", ex);
+        throw;
       }
     }
 
@@ -99,11 +105,17 @@ namespace WhiskyBLL
           throw new NotFoundException("Whisky not found.");
         }
 
+        WhiskyDto existingWhisky = _whiskyRepository.GetWhiskyByName(whisky.Name);
+        if (existingWhisky != null && existingWhisky.Name != null)
+        {
+            throw new WhiskyAlreadyExistsException("Whisky already exists.");
+        }
+        
         _whiskyRepository.UpdateWhisky(whisky);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        throw new Exception("Error updating whisky", ex);
+        throw;
       }
     }
 
@@ -118,9 +130,9 @@ namespace WhiskyBLL
 
         _whiskyRepository.DeleteWhisky(id);
       }
-      catch (Exception ex)
+      catch (Exception)
       {
-        throw new Exception("Error deleting whisky", ex);
+        throw;
       }
     }
   }
