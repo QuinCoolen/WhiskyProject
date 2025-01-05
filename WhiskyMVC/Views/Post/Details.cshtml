@@ -8,16 +8,31 @@
     <h1 class="display-4">Post Details</h1>
 </div>
 
-<div>
-    <h3>Description</h3>
-    <p>@Model.Description</p>
-    <h3>Rating</h3>
-    <p>@Model.Rating</p>
+<div class="container">
+    <div class="card" style="background-color: #3e3e3e; color: #f8f9fa;">
+        <div class="card-body">
+            <h3 class="card-title">@Model.Description</h3>
+            <h5 class="card-subtitle mb-2 text-muted">Rating: @Model.Rating</h5>
 
-    <h3>Whisky Details</h3>
-    <p><strong>Name:</strong> @Model.Whisky.Name</p>
-    <p><strong>Age:</strong> @Model.Whisky.Age years</p>
-    <p><strong>Year:</strong> @Model.Whisky.Year</p>
-    <p><strong>Country:</strong> @Model.Whisky.Country</p>
-    <p><strong>Region:</strong> @Model.Whisky.Region</p>
+            <h4>Whisky Details</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Name:</strong> @Model.Whisky.Name</p>
+                    <p><strong>Age:</strong> @Model.Whisky.Age years</p>
+                    <p><strong>Region:</strong> @Model.Whisky.Region</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Year:</strong> @Model.Whisky.Year</p>
+                    <p><strong>Country:</strong> @Model.Whisky.Country</p>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Post</a>
+                @* <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?');">Delete Post</button>
+                </form> *@
+            </div>
+        </div>
+    </div>
 </div>

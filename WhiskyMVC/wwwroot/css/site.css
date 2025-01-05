@@ -14,13 +14,14 @@ html {
 
 html {
   position: relative;
-  min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
   background-color: #2c2c2c;
   color: #f8f9fa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -33,7 +34,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar .nav-link {
-  color: #f8f9fa!important;
+  color: #d19a6a!important;
 }
 
 .navbar-brand {
@@ -41,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar .nav-link:hover {
-  color: #d19a6a!important;
+  color: #f8f9fa!important;
 }
 
 .btn-primary {
@@ -63,7 +64,13 @@ h1, h2, h3, h4, h5, h6 {
   color: #d19a6a;
 }
 
+.container {
+  flex: 1;
+}
+
 .footer {
   background-color: #3e3e3e;
   color: #f8f9fa;
+  text-align: center;
+  padding: 1rem 0;
 }
