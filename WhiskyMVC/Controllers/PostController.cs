@@ -113,7 +113,8 @@ namespace WhiskyMVC.Controllers
                 WhiskyId = whisky.Id,
                 Description = post.Description,
                 Rating = post.Rating,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                Whisky = whisky
             };
 
             _postService.CreatePost(postDto);

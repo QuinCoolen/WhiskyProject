@@ -104,12 +104,6 @@ namespace WhiskyBLL
         {
           throw new NotFoundException("Whisky not found.");
         }
-
-        WhiskyDto existingWhisky = _whiskyRepository.GetWhiskyByName(whisky.Name);
-        if (existingWhisky != null && existingWhisky.Name != null)
-        {
-            throw new WhiskyAlreadyExistsException("Whisky already exists.");
-        }
         
         _whiskyRepository.UpdateWhisky(whisky);
       }
