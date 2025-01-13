@@ -4,7 +4,7 @@ namespace WhiskyBLL.Exceptions
 {
     public class WhiskyServiceException : Exception
     {
-        public WhiskyServiceException() : base("Whisky already exists.")
+        public WhiskyServiceException() : base("Whisky service error.")
         {
         }
 

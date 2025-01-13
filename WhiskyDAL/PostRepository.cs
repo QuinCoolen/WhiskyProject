@@ -3,6 +3,9 @@ using MySql.Data.MySqlClient;
 using WhiskyBLL.Dto;
 using WhiskyBLL.Interfaces;
 using WhiskyDAL.Entities;
+using WhiskyBLL.Exceptions;
+using System;
+using WhiskyBLL.Exceptions.Post;
 
 namespace WhiskyDAL
 {
@@ -18,118 +21,200 @@ namespace WhiskyDAL
 
         public void CreatePost(PostDto post)
         {
-            using (MySqlConnection conn = new(connectionString))
+            try
             {
-                conn.Open();
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
 
-                MySqlCommand cmd = new("INSERT INTO posts (user_id, whisky_id, description, rating, datetime) VALUES (@userId, @whiskyId, @description, @rating, @datetime)", conn);
-                cmd.Parameters.AddWithValue("@userId", post.UserId);
-                cmd.Parameters.AddWithValue("@whiskyId", post.WhiskyId);
-                cmd.Parameters.AddWithValue("@description", post.Description);
-                cmd.Parameters.AddWithValue("@rating", post.Rating);
-                cmd.Parameters.AddWithValue("@datetime", post.CreatedAt);
+                    MySqlCommand cmd = new MySqlCommand("INSERT INTO posts (user_id, whisky_id, description, rating, datetime) VALUES (@userId, @whiskyId, @description, @rating, @datetime)", conn);
+                    cmd.Parameters.AddWithValue("@userId", post.UserId);
+                    cmd.Parameters.AddWithValue("@whiskyId", post.WhiskyId);
+                    cmd.Parameters.AddWithValue("@description", post.Description);
+                    cmd.Parameters.AddWithValue("@rating", post.Rating);
+                    cmd.Parameters.AddWithValue("@datetime", post.CreatedAt);
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
 
-                conn.Close();
+                    conn.Close();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                throw new PostRepoException("An error occurred while creating the post.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new PostRepoException("An unexpected error occurred while creating the post.", ex);
             }
         }
 
         public List<PostDto> GetPosts()
         {
-            List<PostDto> posts = new();
-
-            using (MySqlConnection conn = new(connectionString))
+            try
             {
-                conn.Open();
+                List<PostDto> posts = new List<PostDto>();
 
-                MySqlCommand cmd = new("SELECT * FROM posts", conn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    PostDto post = new()
+                    conn.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM posts", conn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        Id = reader.GetInt32("id"),
-                        UserId = reader.GetInt32("user_id"),
-                        WhiskyId = reader.GetInt32("whisky_id"),
-                        Description = reader.GetString("description"),
-                        Rating = reader.GetInt32("rating"),
-                        CreatedAt = reader.GetDateTime("datetime")
-                    };
-                    posts.Add(post);
+                        PostDto post = new PostDto
+                        {
+                            Id = reader.GetInt32("id"),
+                            UserId = reader.GetInt32("user_id"),
+                            WhiskyId = reader.GetInt32("whisky_id"),
+                            Description = reader.GetString("description"),
+                            Rating = reader.GetInt32("rating"),
+                            CreatedAt = reader.GetDateTime("datetime")
+                        };
+                        posts.Add(post);
+                    }
+
+                    conn.Close();
                 }
 
-                conn.Close();
+                return posts;
             }
-
-            return posts;
+            catch (MySqlException ex)
+            {
+                throw new PostRepoException("An error occurred while retrieving posts.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new PostRepoException("An unexpected error occurred while retrieving posts.", ex);
+            }
         }
 
         public PostDto GetPostById(int id)
         {
-            PostDto post = null;
-
-            using (MySqlConnection conn = new(connectionString))
+            try
             {
-                conn.Open();
+                PostDto post = null;
 
-                MySqlCommand cmd = new("SELECT * FROM posts WHERE id = @id", conn);
-                cmd.Parameters.AddWithValue("@id", id);
-
-                MySqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    post = new PostDto
+                    conn.Open();
+
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM posts WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        Id = reader.GetInt32("id"),
-                        UserId = reader.GetInt32("user_id"),
-                        WhiskyId = reader.GetInt32("whisky_id"),
-                        Description = reader.GetString("description"),
-                        Rating = reader.GetInt32("rating"),
-                        CreatedAt = reader.GetDateTime("datetime")
-                    };
+                        post = new PostDto
+                        {
+                            Id = reader.GetInt32("id"),
+                            UserId = reader.GetInt32("user_id"),
+                            WhiskyId = reader.GetInt32("whisky_id"),
+                            Description = reader.GetString("description"),
+                            Rating = reader.GetInt32("rating"),
+                            CreatedAt = reader.GetDateTime("datetime")
+                        };
+                    }
+
+                    conn.Close();
                 }
 
-                conn.Close();
-            }
+                if (post == null)
+                {
+                    throw new NotFoundException($"Post with ID {id} was not found.");
+                }
 
-            return post;
+                return post;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (MySqlException ex)
+            {
+                throw new PostRepoException($"An error occurred while retrieving the post with ID {id}.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new PostRepoException($"An unexpected error occurred while retrieving the post with ID {id}.", ex);
+            }
         }
 
         public void UpdatePost(PostDto post)
         {
-            using (MySqlConnection conn = new(connectionString))
+            try
             {
-                conn.Open();
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
 
-                MySqlCommand cmd = new("UPDATE posts SET user_id = @userId, whisky_id = @whiskyId, description = @description, rating = @rating, datetime = @datetime WHERE id = @id", conn);
-                cmd.Parameters.AddWithValue("@id", post.Id);
-                cmd.Parameters.AddWithValue("@userId", post.UserId);
-                cmd.Parameters.AddWithValue("@whiskyId", post.WhiskyId);
-                cmd.Parameters.AddWithValue("@description", post.Description);
-                cmd.Parameters.AddWithValue("@rating", post.Rating);
-                cmd.Parameters.AddWithValue("@datetime", post.CreatedAt);
+                    MySqlCommand cmd = new MySqlCommand("UPDATE posts SET user_id = @userId, whisky_id = @whiskyId, description = @description, rating = @rating, datetime = @datetime WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
+                    cmd.Parameters.AddWithValue("@userId", post.UserId);
+                    cmd.Parameters.AddWithValue("@whiskyId", post.WhiskyId);
+                    cmd.Parameters.AddWithValue("@description", post.Description);
+                    cmd.Parameters.AddWithValue("@rating", post.Rating);
+                    cmd.Parameters.AddWithValue("@datetime", post.UpdatedAt);
 
-                cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
 
-                conn.Close();
+                    conn.Close();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new NotFoundException($"Post with ID {post.Id} was not found for update.");
+                    }
+                }
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (MySqlException ex)
+            {
+                throw new PostRepoException($"An error occurred while updating the post with ID {post.Id}.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new PostRepoException($"An unexpected error occurred while updating the post with ID {post.Id}.", ex);
             }
         }
 
         public void DeletePost(int id)
         {
-            using (MySqlConnection conn = new(connectionString))
+            try
             {
-                conn.Open();
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
 
-                MySqlCommand cmd = new("DELETE FROM posts WHERE id = @id", conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                    MySqlCommand cmd = new MySqlCommand("DELETE FROM posts WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
 
-                cmd.ExecuteNonQuery();
+                    int rowsAffected = cmd.ExecuteNonQuery();
 
-                conn.Close();
+                    conn.Close();
+
+                    if (rowsAffected == 0)
+                    {
+                        throw new NotFoundException($"Post with ID {id} was not found for deletion.");
+                    }
+                }
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (MySqlException ex)
+            {
+                throw new PostRepoException($"An error occurred while deleting the post with ID {id}.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new PostRepoException($"An unexpected error occurred while deleting the post with ID {id}.", ex);
             }
         }
     }
