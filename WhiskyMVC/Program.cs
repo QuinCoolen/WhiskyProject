@@ -23,6 +23,10 @@ builder.Services.AddScoped<PostService, PostService>();
 builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
 builder.Services.AddScoped<FavouriteService, FavouriteService>();
 
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 var app = builder.Build();
 

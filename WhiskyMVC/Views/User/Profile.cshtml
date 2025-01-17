@@ -2,25 +2,47 @@
 
 <h2>@Model.UserName's Profile</h2>
 
-<div class="mb-4">
-    <h3>Your Posts</h3>
-    <div class="row flex-nowrap overflow-auto">
-        @foreach (var post in Model.Posts)
-        {
-            <div class="col-md-4 mb-2">
-                <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
-                    <div class="card-body">
-                        <h5 class="card-title">@post.Description</h5>
-                        <p class="card-text">Date: @post.CreatedAt.ToString("dd/MM/yyyy")</p>
-                    </div>
-                </a>
-            </div>
-        }
+@if (Model.IsCurrentUser)
+{
+    <div class="mb-4">
+        <h3>Your Posts</h3>
+        <div class="row flex-nowrap overflow-auto">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="col-md-4 mb-2">
+                    <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Description</h5>
+                            <p class="card-text">Date: @post.CreatedAt.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+        <div>
+            <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create New Post</a>
+        </div> 
     </div>
-    <div>
-        <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create New Post</a>
-    </div> 
-</div>
+}
+else
+{
+    <div class="mb-4">
+        <h3>@Model.UserName's Posts</h3>
+        <div class="row flex-nowrap overflow-auto">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="col-md-4 mb-2">
+                    <a asp-controller="Post" asp-action="Details" asp-route-id="@post.Id" class="card" style="background-color: #3e3e3e; color: #f8f9fa; text-decoration: none;">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Description</h5>
+                            <p class="card-text">Date: @post.CreatedAt.ToString("dd/MM/yyyy")</p>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
 
 <div>
     <h3>Your Favourites</h3>

@@ -6,6 +6,7 @@ using WhiskyMVC.Models;
 using System.Linq;
 using WhiskyBLL.Interfaces;
 using WhiskyBLL.Services;
+using Microsoft.Extensions.Logging;
 
 namespace WhiskyMVC.Controllers;
 
@@ -14,12 +15,14 @@ public class HomeController : Controller
     private readonly WhiskyService _whiskyService;
     private readonly PostService _postService;
     private readonly UserService _userService;
+    private readonly ILogger<HomeController> _logger;
 
-    public HomeController(WhiskyService whiskyService, PostService postService, UserService userService)
+    public HomeController(WhiskyService whiskyService, PostService postService, UserService userService, ILogger<HomeController> logger)
     {
         _whiskyService = whiskyService;
         _postService = postService;
         _userService = userService;
+        _logger = logger;
     }
 
     public IActionResult Index()

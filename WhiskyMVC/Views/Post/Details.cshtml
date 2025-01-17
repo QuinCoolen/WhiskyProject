@@ -27,14 +27,18 @@
                 </div>
             </div>
 
-            <div class="mt-4 d-flex justify-content-end gap-2">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Post</a>
-                <form asp-controller="Favourite" asp-action="Add" method="post" style="display:inline;">
-                    <input type="hidden" name="UserId" value="@Model.UserId" />
-                    <input type="hidden" name="WhiskyId" value="@Model.WhiskyId" />
-                    <button type="submit" class="btn btn-secondary ml-2">Add to Favourites</button>
-                </form>
-            </div>
+            @if (User.Identity.IsAuthenticated && User.Identity.Name == Model.User.UserName)
+            {
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Post</a>
+                </div>
+            }
+            else
+            {
+                <div class="mt-4 d-flex justify-content-end gap-2">
+                    <a asp-controller="User" asp-action="ViewProfile" asp-route-id="@Model.UserId" class="btn btn-primary">Go to Profile</a>
+                </div>
+            }
         </div>
     </div>
 </div>

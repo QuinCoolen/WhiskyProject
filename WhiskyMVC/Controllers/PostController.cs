@@ -12,11 +12,13 @@ namespace WhiskyMVC.Controllers
     {
         private readonly PostService _postService;
         private readonly WhiskyService _whiskyService;
+        private readonly UserService _userService;
 
-        public PostController(PostService postService, WhiskyService whiskyService)
+        public PostController(PostService postService, WhiskyService whiskyService, UserService userService)
         {
             _postService = postService;
             _whiskyService = whiskyService;
+            _userService = userService;
         }
 
         public IActionResult Index()
@@ -39,7 +41,25 @@ namespace WhiskyMVC.Controllers
         {
             PostDto postDto = _postService.GetPostById(id);
 
+            if (postDto == null)
+            {
+                return NotFound();
+            }
+
+            UserDto userDto = _userService.GetUserById(postDto.UserId);
+
+            if (userDto == null)
+            {
+                return NotFound();
+            }
+
             WhiskyDto whiskyDto = _whiskyService.GetWhiskyById(postDto.WhiskyId);
+
+            if (whiskyDto == null)
+            {
+                return NotFound();
+            }
+
             PostViewModel post = new()
             {
                 Id = postDto.Id,
@@ -56,6 +76,10 @@ namespace WhiskyMVC.Controllers
                     Year = whiskyDto.Year,
                     Country = whiskyDto.Country,
                     Region = whiskyDto.Region
+                },
+                User = new UserProfileViewModel
+                {
+                    UserName = userDto.Name,
                 }
             };
 

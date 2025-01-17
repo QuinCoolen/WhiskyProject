@@ -97,7 +97,7 @@ namespace WhiskyMVC.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userDto.Email),
+                new Claim(ClaimTypes.Name, userDto.Name),
                 new Claim(ClaimTypes.Email, userDto.Email),
                 new Claim(ClaimTypes.NameIdentifier, userDto.Id.ToString())
             };
@@ -123,24 +123,44 @@ namespace WhiskyMVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Profile()
+        [HttpGet]
+        public IActionResult Profile(int? id)
         {
-            if (User.Identity?.IsAuthenticated == false)
+            int userId;
+
+            if (id.HasValue)
             {
-                return RedirectToAction("Login");
+                // Viewing another user's profile
+                userId = id.Value;
+            }
+            else
+            {
+                // Viewing your own profile
+                if (User.Identity?.IsAuthenticated != true)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                string? email = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    return RedirectToAction("Login");
+                }
+
+                UserDto currentUser = _userService.GetUserByEmail(email);
+                if (currentUser == null)
+                {
+                    return RedirectToAction("Login");
+                }
+
+                userId = currentUser.Id;
             }
 
-            string? email = User.Identity.Name;
-            if (string.IsNullOrEmpty(email))
-            {
-                return RedirectToAction("Login");
-            }
-
-            UserDto userDto = _userService.GetUserByEmail(email);
+            UserDto userDto = _userService.GetUserById(userId);
 
             if (userDto == null)
             {
-                return RedirectToAction("Login");
+                return NotFound();
             }
 
             List<PostDto> postsDto = _postService.GetPosts().Where(p => p.UserId == userDto.Id).ToList();
@@ -152,25 +172,78 @@ namespace WhiskyMVC.Controllers
                 favourite.Whisky = whisky;
             }
 
+            bool isCurrentUser = User.Identity.IsAuthenticated && userId.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             UserProfileViewModel model = new UserProfileViewModel
             {
                 UserName = userDto.Name,
-                Posts = postsDto?.Select(post => new PostViewModel
+                Posts = postsDto.Select(post => new PostViewModel
                 {
                     Id = post.Id,
                     Description = post.Description,
                     Rating = post.Rating,
                     CreatedAt = post.CreatedAt
-                }).ToList() ?? new List<PostViewModel>(),
-                Favourites = favouritesDto?.Select(favourite => new FavouriteWhiskyViewModel
+                }).ToList(),
+                Favourites = favouritesDto.Select(favourite => new FavouriteWhiskyViewModel
                 {
                     Id = favourite.WhiskyId,
                     Name = favourite.Whisky?.Name ?? "Unknown",
                     Age = favourite.Whisky?.Age ?? 0,
-                }).ToList() ?? new List<FavouriteWhiskyViewModel>()
+                }).ToList(),
+                IsCurrentUser = isCurrentUser
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ViewProfile(int id)
+        {
+            // Fetch the user by ID
+            UserDto userDto = _userService.GetUserById(id);
+
+            if (userDto == null)
+            {
+                return NotFound(); // User not found
+            }
+
+            // Retrieve the user's posts
+            List<PostDto> postsDto = _postService.GetPosts().Where(p => p.UserId == userDto.Id).ToList();
+
+            // Retrieve the user's favourites
+            List<FavouriteDto> favouritesDto = _favouriteService.GetFavouritesByUserId(userDto.Id);
+
+            // Populate Whisky details in favourites
+            foreach (var favourite in favouritesDto)
+            {
+                WhiskyDto whisky = _whiskyService.GetWhiskyById(favourite.WhiskyId);
+                favourite.Whisky = whisky;
+            }
+
+            // Determine if the profile being viewed is the current user's
+            bool isCurrentUser = User.Identity.IsAuthenticated && userDto.Id.ToString() == User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Create the view model
+            UserProfileViewModel model = new UserProfileViewModel
+            {
+                UserName = userDto.Name,
+                Posts = postsDto.Select(post => new PostViewModel
+                {
+                    Id = post.Id,
+                    Description = post.Description,
+                    Rating = post.Rating,
+                    CreatedAt = post.CreatedAt
+                }).ToList(),
+                Favourites = favouritesDto.Select(favourite => new FavouriteWhiskyViewModel
+                {
+                    Id = favourite.WhiskyId,
+                    Name = favourite.Whisky?.Name ?? "Unknown",
+                    Age = favourite.Whisky?.Age ?? 0,
+                }).ToList(),
+                IsCurrentUser = isCurrentUser // Add this property to identify if it's the current user
+            };
+
+            return View("Profile", model); // Reuse the existing Profile view
         }
     }
 }
